@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hands-on Session 2: Your first agent</title>
+<style>
+:root{--bg:#f7f5f0;--panel:#fff;--ink:#1d1d1b;--muted:#5d5a52;--line:#dcd7cc;--accent:#2d5be3;--ok:#1f7a3a;--warn:#b26a00;--bad:#b3261e;--code:#f0ede6}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#15151a;--panel:#1f1f26;--ink:#ecebe6;--muted:#a8a69e;--line:#34343d;--accent:#7f9dff;--ok:#5ccc80;--warn:#f0b05a;--bad:#ff8a80;--code:#2a2a33}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+header{padding:28px 16px 12px;max-width:820px;margin:0 auto}
+h1{font-size:30px;margin:0 0 6px;line-height:1.2}
+.lede{color:var(--muted);margin:0 0 14px}
+main{max-width:820px;margin:0 auto;padding:0 16px 80px}
+.day{margin:34px 0 10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.station{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;margin:14px 0}
+.station h2{font-size:21px;margin:0 0 2px}
+.meta{color:var(--muted);font-size:14px;margin:0 0 12px}
+.goal{margin:0 0 12px;padding:10px 12px;border-left:4px solid var(--accent);background:var(--code);border-radius:6px}
+.model{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.model h2{font-size:19px;margin:0 0 8px}
+.model table{border-collapse:collapse;width:100%;font-size:15px}
+.model td,.model th{text-align:left;padding:6px 8px;border-top:1px solid var(--line);vertical-align:top}
+.model th{color:var(--muted);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase}
+ol{padding-left:22px;margin:8px 0 12px}
+ol li{margin:6px 0}
+.prompt{position:relative;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;white-space:pre-wrap;word-break:break-word}
+.prompt button{position:absolute;top:8px;right:8px;font:600 13px -apple-system,sans-serif;background:var(--accent);color:#fff;border:0;border-radius:6px;padding:5px 10px;cursor:pointer}
+.prompt button.copied{background:var(--ok)}
+.prompt .label{display:block;font:600 12px -apple-system,sans-serif;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;padding-right:70px}
+.look{margin:10px 0 0}
+.look summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.look ul{margin:6px 0 0;padding-left:20px}
+.fb{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.fb .q{font-weight:600;margin-bottom:6px}
+.choices{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.choices label{border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:15px;user-select:none}
+.choices input{display:none}
+.choices label:has(input:checked){border-color:currentColor;font-weight:600}
+.choices label.ok:has(input:checked){color:var(--ok)}.choices label.part:has(input:checked){color:var(--warn)}.choices label.bad:has(input:checked){color:var(--bad)}
+textarea{width:100%;min-height:84px;font:15px/1.5 -apple-system,sans-serif;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);resize:vertical}
+.done{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:15px;color:var(--muted)}
+.done input{width:18px;height:18px}
+.saved{font-size:12px;color:var(--muted);float:right}
+.bar{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 16px}
+.bar .inner{max-width:820px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bar .prog{flex:1;color:var(--muted);font-size:14px;min-width:120px}
+.bar button{font:600 14px -apple-system,sans-serif;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;padding:7px 12px;cursor:pointer}
+.bar button.primary{background:var(--accent);color:#fff}
+.note{font-size:15px;color:var(--muted)}
+.gotcha{border-left:4px solid var(--warn);background:var(--code);padding:8px 12px;border-radius:6px;margin:8px 0}
+code{font:14px ui-monospace,Menlo,monospace;background:var(--code);padding:1px 5px;border-radius:4px}
+a{color:var(--accent)}
+footer{max-width:820px;margin:30px auto 0;padding:0 16px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="bar"><div class="inner">
+  <span class="prog" id="prog">0 of 6 stations done</span>
+  <button id="copyAll" class="primary">Copy all feedback for Claude</button>
+  <button id="dl">Download feedback file</button>
+</div></div>
+
+<header>
+  <h1>Hands-on Session 2: Your first agent</h1>
+  <p class="lede">Six stations, about 55 minutes, two sittings. By the end, Cowork on your Mac turns a meeting transcript into grounded action items and a draft email, first by hand, then as a reusable skill, then automatically when a transcript lands in your inbox. That is the agent you described, built on the Mac so it transfers to work.</p>
+  <p class="note">Files you need, already in your Downloads folder on the Mac (links here for any other device): <a href="../assets/sample-transcript.md" download>sample-transcript.md</a> (a made-up 26-minute meeting) and <a href="../assets/meeting-actions-SKILL.md" download>meeting-actions-SKILL.md</a> (the skill file, written for you).</p>
+</header>
+
+<main>
+
+<div class="model">
+  <h2>The mental model for Cowork, since you asked</h2>
+  <p style="margin:0 0 8px">Chat is you doing the work with an adviser beside you. Cowork is you delegating the work to a junior colleague who has access to your files, mail and calendar. You give the goal, it writes a plan, it does the steps across apps, and it stops to ask before anything that sends, posts, creates or changes something. The side panel is its desk: progress, the files it was given, the files it made, the skills it loaded, the permissions you granted.</p>
+  <table>
+    <tr><th>Cowork word</th><th>What it is</th><th>Claude Code equivalent</th></tr>
+    <tr><td>Session</td><td>One task, with a plan, steps and approvals</td><td>One Claude Code conversation</td></tr>
+    <tr><td>Skill</td><td>A SKILL.md file with a name, a description that says when to use it, and instructions. Lives in OneDrive at <code>/Documents/Cowork/skills/&lt;name&gt;/</code>. Up to 50.</td><td>A SKILL.md in .claude/skills</td></tr>
+    <tr><td>Approval</td><td>A card with the exact email, post or file change before it happens. "Always allow" lasts for the session only.</td><td>Permission prompt</td></tr>
+    <tr><td>Scheduled prompt</td><td>A prompt that runs on a timetable. Up to 25. Managed on the Automations page.</td><td>A cron routine</td></tr>
+    <tr><td>Event-driven task</td><td>A prompt that runs when an email arrives or a Teams message lands. Results go to you only, as drafts, until you approve.</td><td>A hook or a trigger</td></tr>
+  </table>
+  <p class="note" style="margin:10px 0 0">Source: Microsoft Learn, Cowork overview and Use Cowork, dated September 2026. One limit that matters for your agent: there is no "meeting transcript is ready" trigger. The triggers are an email arriving or a Teams message arriving. So the agent watches for the recap email that Teams sends after a recorded meeting, or runs on a schedule. Station 5 uses the email trigger.</p>
+</div>
+
+<div class="day">Sitting 1, about 30 minutes: specific prompts, grounded answers, the agent by hand</div>
+
+<section class="station" id="s1" data-n="1">
+  <h2>1. Specific prompts: the five-part frame</h2>
+  <p class="meta">10 min. Microsoft Word, the document from Session 1.</p>
+  <p class="goal">Goal: feel the difference a specific prompt makes, and fix the Word problem from Session 1 where "half the length" rewrote the whole document.</p>
+  <p>You said my prompts need to be more specific. You are right, and there is a frame for it. Every prompt to Copilot carries five parts: <strong>Scope</strong> (what exactly to touch), <strong>Goal</strong> (what good looks like), <strong>Source</strong> (what to use and what not to), <strong>Format</strong> (the shape of the answer), <strong>Check</strong> (what to tell you if it cannot comply). Vague prompts leave Copilot to guess the scope, and it guesses big.</p>
+  <ol>
+    <li>Open <em>How I will use Copilot this quarter</em> in Word. Select one paragraph only.</li>
+    <li>Use the Copilot icon beside the selection and send prompt A, the vague one. Watch what it changes. Undo (<code>⌘Z</code>).</li>
+    <li>Select the same paragraph. Send prompt B, the specific one. Watch what it changes.</li>
+    <li>In the Copilot pane, send prompt C. It asks Copilot to rewrite your own vague prompt into the frame. Keep what it gives you.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt A (vague, on purpose)</span>Make this half the length.</div>
+  <div class="prompt"><span class="label">Prompt B (specific)</span>Rewrite only the selected paragraph. Leave every other paragraph unchanged. Cut it to half its current word count, keep the same meaning and the same first sentence, no bullet points. If you cannot do it without changing the meaning, tell me instead of rewriting.</div>
+  <div class="prompt"><span class="label">Prompt C (Copilot pane)</span>I want to get better at prompting you. Take this prompt: "Summarise this document and tell me what my manager will ask." Rewrite it using five parts: Scope, Goal, Source, Format, Check. Show the rewritten prompt only, then run it.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Did prompt A touch more than the selection again? Did prompt B stay inside it? That one difference is the whole lesson.</li>
+    <li>Prompt C turns Copilot into your prompt editor. Use it whenever an answer disappoints: ask it to rewrite your prompt before you rewrite your prompt.</li>
+    <li>The Check part is what stops silent failure. Without it, Copilot does something rather than nothing.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s2" data-n="2">
+  <h2>2. The grounding test</h2>
+  <p class="meta">10 min. Copilot app, Chat tab, new chat. Needs sample-transcript.md.</p>
+  <p class="goal">Goal: prove to yourself whether Copilot will stay inside a source, and learn the test that catches it when it does not. This is the answer to your Researcher concern, in miniature.</p>
+  <ol>
+    <li>New chat. Attach <strong>sample-transcript.md</strong> from Downloads.</li>
+    <li>Send prompt A. Check every evidence quote against the transcript. There are eight or nine genuine action items in it, depending on how you count one of them; the answer key is under "what to watch for".</li>
+    <li>Send prompt B, the trap. The transcript does not contain that information.</li>
+    <li>Send prompt C.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt A</span>Using only the attached transcript, list every action item: something a named person agreed to do. For each one give the action, the owner, the due date exactly as stated, and a quote under 20 words with its timestamp as evidence. If an owner or date is not stated, write "not stated". Do not include tentative items like "maybe" or "park it". Table format.</div>
+  <div class="prompt"><span class="label">Prompt B (the trap)</span>How many pilot customers cancelled their subscription, and what reasons did they give?</div>
+  <div class="prompt"><span class="label">Prompt C</span>List everything in the transcript that you deliberately left out of the action items, and say in one line each why it did not qualify.</div>
+  <details class="look"><summary>What a power user watches for, with the answer key</summary><ul>
+    <li>The genuine action items: Marcus confirms the data clause in writing today; Priya returns the contract draft Thursday; Dana calls the two inactive customers this week; Dana has call notes by Monday the 20th; Marcus reports on Friday whether the export error is a timeout; Dana mentions the export issue on the call with no dates; Ryan chases finance for pricing; Priya finishes the training deck the week of the 27th; Ryan sets up a dry run on the 30th. That is nine lines because Dana's call and her notes can be counted as one or two. Either is fine.</li>
+    <li>Not action items: the status page (parked), Marcus wanting "a week to fix it" (Ryan said not to commit). If either shows up as an action, that is inference, and that is the failure your agent must not make.</li>
+    <li>Prompt B: the only honest answer is that the transcript does not say. Anything else is invented.</li>
+    <li>Prompt C is the quality check you can run on any extraction. What it left out tells you more than what it kept.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s3" data-n="3">
+  <h2>3. The agent by hand, in Cowork</h2>
+  <p class="meta">10 min. Copilot app, Cowork tab. Needs sample-transcript.md.</p>
+  <p class="goal">Goal: run your whole agent once as a single Cowork task: transcript in, grounded action items, draft email with the transcript attached, approval, send to yourself.</p>
+  <ol>
+    <li>Click the <strong>Cowork</strong> tab. Drag <strong>sample-transcript.md</strong> onto the chat box.</li>
+    <li>Paste the prompt. Swap in your own email address.</li>
+    <li>Watch the side panel on the right: Progress, Input folder, Skills. Note which built-in skills it loads (expect Email, maybe Word).</li>
+    <li>When the approval card appears, read the draft. Check the attachment is there. Then approve with <strong>Send</strong>.</li>
+    <li>Check your inbox.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt</span>Read the attached meeting transcript. Using only what the transcript says, extract: (1) action items as a table with columns #, Action, Owner, Due, Evidence quote with timestamp; (2) decisions, quoted; (3) open questions and parked items. Rules: never infer an owner or date, write "not stated" instead; tentative items ("maybe", "park it", "not committing yet") are not actions. Then draft an email to [your email address] with subject "Action items: Q4 launch readiness sync (2026-10-14)", the table and lists in the body, the sentence "Reply if anything here is wrong; this was prepared from the transcript, not from memory", and the transcript file attached. Show me the draft and ask before sending.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Did it show a plan before acting? Did it ask before sending, as told? The approval card should show the full email.</li>
+    <li>Compare its table with station 2. Same eight items? Same "not stated" where the transcript is silent?</li>
+    <li>The email in your inbox is the first output of your agent. Everything after this is making it repeatable.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<div class="day">Sitting 2, about 25 minutes: make it a skill, make it automatic, plan the move to work</div>
+
+<section class="station" id="s4" data-n="4">
+  <h2>4. Install the Meeting Actions skill</h2>
+  <p class="meta">10 min. Copilot app, Cowork tab. Needs meeting-actions-SKILL.md.</p>
+  <p class="goal">Goal: turn the prompt from station 3 into a skill Cowork loads by itself whenever you hand it a transcript. I wrote the skill file; you install it and read Cowork's quality report on it.</p>
+  <div class="gotcha">The skill file is the same idea as a SKILL.md in Claude Code: a name, a description that says when to fire, then instructions. Open it in any text editor first and read it. You should be able to change any line of it later.</div>
+  <ol>
+    <li>In Cowork, find <strong>Customize</strong> in the left navigation. Open the <strong>Skills</strong> tab.</li>
+    <li>Click the small arrow next to <strong>Add</strong>, choose <strong>Upload skill</strong>, and pick <strong>meeting-actions-SKILL.md</strong> from Downloads.</li>
+    <li>Cowork evaluates the skill and shows a Skill Report with a score out of 100 across four parts: trigger clarity, instruction specificity, scope boundaries, robustness. Write the score and any "needs work" line into the feedback box.</li>
+    <li>If Customize or Upload is not there on your personal account, use the fallback: in OneDrive create the folder <code>Documents/Cowork/skills/meeting-actions/</code>, copy the file in, and rename it <code>SKILL.md</code>. Cowork finds it at the start of the next session.</li>
+    <li>Start a new Cowork session, attach <strong>sample-transcript.md</strong>, and send the prompt. It is deliberately short: the skill should carry the rest.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt (short on purpose)</span>Action items from this meeting, please. Draft the email to me but do not send it.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Did "Meeting Actions" appear as a chip in the Skills section of the side panel? That means the description triggered it. If it did not, the fix is the description line in the file, not the prompt.</li>
+    <li>Did the short prompt produce the same quality as the long one in station 3? That is the point of a skill: the instructions live in the file, not in your head.</li>
+    <li>The Skill Report is Microsoft grading your agent. Keep the score; we will try to raise it next session.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s5" data-n="5">
+  <h2>5. Make it automatic with an email trigger</h2>
+  <p class="meta">10 min. Copilot app, Cowork tab, plus your mail app.</p>
+  <p class="goal">Goal: the agent runs on its own when a transcript arrives, and you only approve the result.</p>
+  <ol>
+    <li>In Cowork, new session. Paste the prompt.</li>
+    <li>Cowork should answer with a <strong>Set up trigger?</strong> card showing When, Run in, What it does, and the permissions it needs. Read it, then click <strong>Set up</strong>.</li>
+    <li>Now fire it: from your mail app, send yourself an email with the subject <code>Transcript: Q4 launch readiness sync</code> and <strong>sample-transcript.md</strong> attached.</li>
+    <li>Open <strong>Automations</strong> in the left navigation (or <strong>My tasks</strong>, filter Automations). Watch for the run. It may take a few minutes; Microsoft rate-limits triggers.</li>
+    <li>Open the run, check the draft, approve it. Then pause or delete the trigger so it does not keep firing on test mail.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt</span>Whenever I receive an email whose subject starts with "Transcript:", use the Meeting Actions skill on the attached transcript and draft the follow-up email to me for my review. Never send anything without my approval.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Does the trigger card name the skill? If it only shows your words, the skill may still load at run time. Check the run's side panel.</li>
+    <li>How long between the email landing and the run appearing? Write it down; at work the recap email arrives minutes after a meeting ends, so this delay is your agent's real latency.</li>
+    <li>If personal Cowork has no triggers yet (it is in preview), note it and fall back to a scheduled prompt: "Every weekday at 5 pm, check my inbox for emails from today with a subject starting Transcript: and run the Meeting Actions skill on each."</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s6" data-n="6">
+  <h2>6. Moving it to work, and your verdict</h2>
+  <p class="meta">5 min. No app needed.</p>
+  <p class="goal">What changes when this agent moves to the work account, so nothing you learned here is wasted.</p>
+  <ol>
+    <li><strong>The transcript source changes.</strong> At work Cowork can read Teams meetings directly through "Add work context", and the Meetings skill prepares meeting intelligence. The trigger becomes the recap email Teams sends after a recorded meeting, which starts with the meeting name. Everything else in the skill file stays the same.</li>
+    <li><strong>The skill can be shared.</strong> On a work account the skill's detail page has a Share button for specific people in the organisation. That is Stage 3 of your mission, being the team's Copilot person, already in reach.</li>
+    <li><strong>Approvals matter more.</strong> The email goes to real attendees. Keep "ask before sending" in the skill. Never switch on "always allow" for sending.</li>
+    <li><strong>What to carry over by hand:</strong> the skill file (copy it into the work OneDrive at the same path), your five-part prompt frame, and the grounding test from station 2.</li>
+  </ol>
+  <div class="fb" data-verdict="1"></div>
+</section>
+
+</main>
+<footer>Part of the <a href="../index.html">Copilot Field Guide</a>. Session 1 is <a href="session-01-hands-on.html">here</a>. Feedback lives only in this browser until you copy it out.</footer>
+
+<script>
+(function(){
+  const KEY='m365-session-02';
+  let state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){state={}}
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+  const stations=[...document.querySelectorAll('.station')];
+
+  stations.forEach(s=>{
+    const n=s.dataset.n, fb=s.querySelector('.fb'), st=state[n]=state[n]||{};
+    if(fb.dataset.verdict){
+      fb.innerHTML=`
+        <div class="q">Did the agent produce something you would actually send to colleagues? What would you change first?</div><textarea data-k="v1"></textarea>
+        <div class="q" style="margin-top:10px">Skill Report score from station 4, and the one line it said needs work:</div><textarea data-k="v2"></textarea>
+        <div class="q" style="margin-top:10px">What would you want the agent to do next: a second skill, a different trigger, a Teams post, something else?</div><textarea data-k="v3"></textarea>
+        <label class="done"><input type="checkbox" data-k="done"> Finished</label>`;
+    }else{
+      fb.innerHTML=`
+        <div class="q">How did it go? <span class="saved" data-saved></span></div>
+        <div class="choices">
+          <label class="ok"><input type="radio" name="r${n}" value="Worked well"> Worked well</label>
+          <label class="part"><input type="radio" name="r${n}" value="Partly"> Partly</label>
+          <label class="bad"><input type="radio" name="r${n}" value="Did not work"> Did not work</label>
+        </div>
+        <textarea data-k="text" placeholder="What happened, what it got wrong, what a button or page was actually called if it differed from these steps."></textarea>
+        <label class="done"><input type="checkbox" data-k="done"> Finished this station</label>`;
+    }
+    fb.querySelectorAll('textarea').forEach(t=>{t.value=st[t.dataset.k]||'';t.addEventListener('input',()=>{st[t.dataset.k]=t.value;save();flash(fb)})});
+    fb.querySelectorAll('input[type=radio]').forEach(r=>{r.checked=(st.rating===r.value);r.addEventListener('change',()=>{st.rating=r.value;save();flash(fb)})});
+    const d=fb.querySelector('input[type=checkbox]');d.checked=!!st.done;d.addEventListener('change',()=>{st.done=d.checked;save();progress()});
+  });
+
+  function flash(fb){const el=fb.querySelector('[data-saved]');if(!el)return;el.textContent='saved';clearTimeout(el._t);el._t=setTimeout(()=>el.textContent='',1200)}
+  function progress(){const d=stations.filter(s=>state[s.dataset.n]&&state[s.dataset.n].done).length;document.getElementById('prog').textContent=`${d} of ${stations.length} stations done`}
+  progress();
+
+  document.querySelectorAll('.prompt').forEach(p=>{
+    const b=document.createElement('button');b.textContent='Copy';
+    b.onclick=()=>{const t=[...p.childNodes].filter(n=>n.nodeType===3||(n.nodeType===1&&!n.matches('button,.label'))).map(n=>n.textContent).join('').trim();
+      navigator.clipboard.writeText(t).then(()=>{b.textContent='Copied';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied')},1500)})};
+    p.appendChild(b);
+  });
+
+  function report(){
+    const lines=['# Hands-on Session 2 feedback',`Exported ${new Date().toISOString().slice(0,16).replace('T',' ')}`,''];
+    stations.forEach(s=>{
+      const n=s.dataset.n, st=state[n]||{}, title=s.querySelector('h2').textContent;
+      lines.push(`## ${title}`);
+      if(s.querySelector('[data-verdict]')){
+        lines.push(`- Would send it: ${st.v1||'(blank)'}`,`- Skill Report: ${st.v2||'(blank)'}`,`- Next for the agent: ${st.v3||'(blank)'}`);
+      }else{
+        lines.push(`- Rating: ${st.rating||'(not rated)'}`,`- Finished: ${st.done?'yes':'no'}`,`- Notes: ${(st.text||'(blank)').replace(/\n/g,'\n  ')}`);
+      }
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+  document.getElementById('copyAll').onclick=function(){navigator.clipboard.writeText(report()).then(()=>{this.textContent='Copied. Paste it to Claude.';setTimeout(()=>this.textContent='Copy all feedback for Claude',2500)})};
+  document.getElementById('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([report()],{type:'text/markdown'}));a.download='session-02-feedback.md';a.click()};
+})();
+</script>
+</body>
+</html>
