@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copilot Glossary</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<header class="lesson">
+  <nav class="course"><a href="copilot-map.html">Copilot map</a><a href="../lessons/0001-the-three-copilots-and-where-they-live.html">Lesson 1</a></nav>
+  <div class="kicker">Reference</div>
+  <h1>Copilot Glossary</h1>
+  <p class="meta">Terms used across every lesson. Every lesson sticks to these meanings. Verified against Microsoft's pages on 2026-10-08 to 2026-10-10.</p>
+</header>
+
+<div class="table-wrap">
+<table>
+<tr><th>Term</th><th>Meaning</th><th>You already know it as</th></tr>
+<tr><td><strong>Microsoft 365 Premium</strong></td><td>The home subscription (1 to 6 people, personal Microsoft account). Copilot in the Office apps, the Copilot app, Researcher, higher usage limits, Cowork in preview. AI features are for the account owner only.</td><td>Your personal Claude or ChatGPT plan.</td></tr>
+<tr><td><strong>Microsoft 365 Copilot</strong> (work)</td><td>The work product. Three licence levels: Copilot Chat (Basic), Microsoft 365 Copilot (Basic), Microsoft 365 Copilot (Premium). Only the top one reads your work data automatically.</td><td>The company Claude for Work or Team plan.</td></tr>
+<tr><td><strong>Copilot Chat</strong></td><td>The chat surface. At work it opens at <code>copilot.cloud.microsoft</code>, in the Copilot app, in Edge, and inside Outlook and Teams.</td><td>The chat window.</td></tr>
+<tr><td><strong>Microsoft Graph</strong></td><td>Microsoft's map of your work data: email, files, meetings, calendar, Teams, who reports to whom. Copilot (Premium) reads it to ground answers.</td><td>The data an MCP connector exposes.</td></tr>
+<tr><td><strong>Work IQ</strong></td><td>The intelligence layer that lets Copilot and agents reason over work data, content and tools. Can be switched on or off.</td><td>Your tool and context layer.</td></tr>
+<tr><td><strong>Grounding</strong></td><td>Feeding the model facts from a source (web, your files, Graph) before it answers, so the answer is about your stuff.</td><td>Retrieval, RAG, context.</td></tr>
+<tr><td><strong>Copilot Search</strong></td><td>One search across all Microsoft 365 apps and connected outside sources, with a hand-off into chat.</td><td>Semantic search over your workspace.</td></tr>
+<tr><td><strong>Agent</strong></td><td>A scoped version of Copilot with its own instructions, knowledge and actions. Prebuilt ones include Researcher and Analyst.</td><td>A Claude Project or a skill.</td></tr>
+<tr><td><strong>Researcher</strong></td><td>Prebuilt multistep research agent. Asks clarifying questions, then returns a cited report from web, work data, or both. Under Agents in Chat.</td><td>Deep research mode.</td></tr>
+<tr><td><strong>Analyst</strong></td><td>Prebuilt data-analysis agent (runs code over your data). Listed "coming soon" for the home plan at launch.</td><td>Code interpreter / analysis tool.</td></tr>
+<tr><td><strong>Cowork</strong></td><td>The agent that acts on your behalf across Microsoft 365: sends email, schedules, builds files, posts in Teams, runs scheduled and event-driven tasks. Approves each sensitive step with you. Has built-in and custom skills.</td><td>Claude Code, or Claude's Cowork.</td></tr>
+<tr><td><strong>Cowork skill</strong></td><td>A task-specific capability Cowork loads during a session (Word, Email, Scheduling, Deep Research, and up to 50 of your own).</td><td>A SKILL.md file.</td></tr>
+<tr><td><strong>Agent builder</strong></td><td>No-code agent creation inside Copilot Chat: instructions plus knowledge sources.</td><td>Making a Claude Project.</td></tr>
+<tr><td><strong>Copilot Studio</strong></td><td>Low-code studio for agents, workflows and agent flows, with analytics and evaluations. Web app at <code>copilotstudio.microsoft.com</code>.</td><td>A visual agent framework.</td></tr>
+<tr><td><strong>Declarative agent</strong></td><td>An agent that uses Copilot's own model and orchestrator with your instructions, knowledge and API actions. No hosting.</td><td>A system prompt plus tools, hosted for you.</td></tr>
+<tr><td><strong>Custom engine agent</strong></td><td>An agent where you bring the model and orchestrator, hosted outside Microsoft 365 (Azure, Semantic Kernel, LangChain). Can act proactively.</td><td>Your own Agent SDK app.</td></tr>
+<tr><td><strong>Agents Toolkit</strong></td><td>Microsoft 365 Agents Toolkit: the VS Code extension for building declarative and custom engine agents in code.</td><td>Agent SDK plus scaffolding.</td></tr>
+<tr><td><strong>Pages</strong></td><td>An editable, shareable canvas that chat output can be sent to and worked on with others.</td><td>An artifact.</td></tr>
+<tr><td><strong>Notebooks</strong></td><td>A space that holds a set of sources and lets you chat over them, with auto notes and mind maps. Light version in the Copilot app, full version in OneNote.</td><td>NotebookLM.</td></tr>
+<tr><td><strong>Frontier</strong></td><td>Microsoft's early-access preview program for work tenants. Gates things like Researcher's Computer Use, Model Council and Cowork's App skill.</td><td>A beta program.</td></tr>
+<tr><td><strong>Copilot Academy</strong></td><td>Microsoft's guided course hub inside Viva Learning (Teams or web). Work account required.</td><td>The official docs course.</td></tr>
+</table>
+</div>
+
+<footer class="lesson">Sources: <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview">What is Microsoft Copilot?</a>, <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/">Cowork overview</a>, <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agents-overview">Declarative vs custom engine agents</a>, <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio">Copilot Studio overview</a>, <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot">Get started with Researcher</a>.</footer>
+</main>
+</body>
+</html>

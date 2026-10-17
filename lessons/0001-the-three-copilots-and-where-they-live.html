@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 1: The Copilots and where they live</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<header class="lesson">
+  <nav class="course"><a href="../reference/copilot-map.html">Copilot map</a><a href="../reference/glossary.html">Glossary</a></nav>
+  <div class="kicker">Lesson 1 · about 20 minutes · Mission stage 1</div>
+  <h1>The Copilots and where they live</h1>
+  <p class="lede">One name, two products, three licence levels. By the end you can say which Copilot you are talking to, what it can see, and where to click to reach the agent you want.</p>
+  <p class="meta">Written 2026-10-10 from Microsoft's own pages. Microsoft changes this surface monthly; dates matter.</p>
+</header>
+
+<h2>Why this comes first</h2>
+<p>You already know what an agent is, what grounding is, and what a tool call is. What you do not have is Microsoft's names and addresses for those things, and the one fact that trips most new users: <strong>the Copilot on your Mac and the Copilot at work are different products that cannot see each other's data.</strong> Every later lesson labels its task <span class="tag mac">Mac</span> or <span class="tag work">Work</span> because of this.</p>
+
+<h2>The map in three rows</h2>
+<div class="table-wrap">
+<table>
+<tr><th>Licence label you will see</th><th>What grounds its answers</th><th>You know this shape as</th></tr>
+<tr><td><strong>Copilot Chat (Basic)</strong></td><td>The web, plus whatever you paste, upload, or have open in Outlook or Teams.</td><td>A chat model with no connectors.</td></tr>
+<tr><td><strong>M365 Copilot (Basic)</strong></td><td>Same as above, plus standard-priority Copilot inside Word, Excel, PowerPoint and OneNote.</td><td>Same, with the model wired into your editor.</td></tr>
+<tr><td><strong>M365 Copilot (Premium)</strong> <span class="tag work">Work</span></td><td>Web <em>and</em> your email, files, meetings, calendar and Teams, automatically, through Microsoft Graph (Microsoft's map of your work data) and Work IQ (the layer that lets Copilot reason over it).</td><td>A model with an MCP connector to everything at work.</td></tr>
+</table>
+</div>
+<p class="cite">Source: <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview">What is Microsoft Copilot? (Microsoft Learn)</a>. The label appears under your name at <code>copilot.cloud.microsoft</code>.</p>
+
+<div class="aside"><strong>And your home plan?</strong> Microsoft 365 Premium <span class="tag mac">Mac</span> is the consumer product. It gives you Copilot in the Office apps, the Copilot app, Researcher, Cowork in preview, and the highest home usage limits, all tied to your <em>personal</em> account. It never sees work data. It is your sandbox for learning the moves. <span class="cite"><a href="https://support.microsoft.com/en-us/office/introducing-microsoft-365-premium">Introducing Microsoft 365 Premium</a></span></div>
+
+<h2>The four doors</h2>
+<p>Everything in this course opens through one of four doors. Learn the doors and the rest is navigation.</p>
+<div class="table-wrap">
+<table>
+<tr><th>Door</th><th>What is behind it</th><th>Where</th></tr>
+<tr><td><strong>1. Chat</strong></td><td>Copilot Chat with the model picker (Auto, Quick response, Think deeper) and the <strong>Agents</strong> rail where Researcher and Analyst live.</td><td><code>copilot.cloud.microsoft</code>, the Copilot app, Edge, Outlook, Teams</td></tr>
+<tr><td><strong>2. The app you are in</strong></td><td>Copilot inside Word, Excel, PowerPoint, Outlook, OneNote, Teams: draft, rewrite, summarize, analyze, recap.</td><td>Copilot button on the Home ribbon</td></tr>
+<tr><td><strong>3. Cowork</strong></td><td>The agent that <em>does</em> things: sends email, schedules meetings, builds files, posts in Teams, runs scheduled tasks. It pauses for your approval before sensitive steps, the way Claude Code asks before a risky command.</td><td>Cowork tab at <code>copilot.cloud.microsoft</code> or in the Copilot desktop app</td></tr>
+<tr><td><strong>4. Builders</strong> <span class="tag work">Work</span></td><td>Agent builder (no code, inside Chat) and Copilot Studio (low code). Stage 2 of your mission.</td><td>Chat, and <code>copilotstudio.microsoft.com</code></td></tr>
+</table>
+</div>
+<p class="cite">Sources: <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/">Cowork overview</a>, <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot">Get started with Researcher</a>, <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio">Copilot Studio overview</a>.</p>
+
+<div class="aside"><strong>One thing that already changed.</strong> On 18 August 2026 Microsoft retired Deep Research, Podcasts and Group Chat from the home Copilot app, and moved Copilot Tasks into Cowork. Researcher is now the research agent on both sides. If a tutorial mentions Deep Research, it is out of date. <span class="cite"><a href="https://support.microsoft.com/en-us/microsoft-365-copilot/learning/changes-microsoft-copilot-app">Copilot app updates</a></span></div>
+
+<h2>Check yourself</h2>
+<p class="meta">Answer from memory before scrolling back. Getting one wrong and seeing why is worth more than getting it right by looking.</p>
+<p class="quiz-score"></p>
+
+<div class="quiz" data-answer="1">
+  <p class="q">1. Which Copilot reads your work email and files without you uploading them?</p>
+  <div class="opts">
+    <button class="opt">Copilot Chat (Basic) licence</button>
+    <button class="opt">Microsoft 365 Copilot (Premium)</button>
+    <button class="opt">Microsoft 365 Premium plan</button>
+    <button class="opt">Copilot inside Edge browser</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Only the work add-on's top level grounds in Graph and Work IQ automatically. The home "Premium" plan shares the word but not the data.</p>
+</div>
+
+<div class="quiz" data-answer="2">
+  <p class="q">2. Your home Premium plan's AI features belong to which sign-in?</p>
+  <div class="opts">
+    <button class="opt">Your work Entra account</button>
+    <button class="opt">Any shared family member</button>
+    <button class="opt">The personal account owner</button>
+    <button class="opt">Any device you choose</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Premium covers up to six people, but the AI features are for the subscription owner only and cannot be shared.</p>
+</div>
+
+<div class="quiz" data-answer="3">
+  <p class="q">3. Which one sends the email itself, after you approve the step?</p>
+  <div class="opts">
+    <button class="opt">Copilot Search feature</button>
+    <button class="opt">Researcher reasoning agent</button>
+    <button class="opt">Copilot Notebooks space</button>
+    <button class="opt">Microsoft Copilot Cowork</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Cowork acts: it drafts and sends through Outlook, schedules, builds files, posts in Teams. Researcher only reports.</p>
+</div>
+
+<div class="quiz" data-answer="0">
+  <p class="q">4. Where does Researcher live in the work chat?</p>
+  <div class="opts">
+    <button class="opt">Under Agents in Chat</button>
+    <button class="opt">Inside the Excel ribbon</button>
+    <button class="opt">In Copilot Studio only</button>
+    <button class="opt">Behind the model picker</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Open Chat, then the Agents rail. Researcher can also be invoked inside a Notebook.</p>
+</div>
+
+<div class="quiz" data-answer="2">
+  <p class="q">5. Deep Research in the home Copilot app was...</p>
+  <div class="opts">
+    <button class="opt">Renamed to Copilot Search</button>
+    <button class="opt">Moved into Copilot Studio</button>
+    <button class="opt">Retired, Researcher replaces it</button>
+    <button class="opt">Merged into Copilot Notebooks</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Retired 18 August 2026. Researcher is the research agent on both the home and work sides now.</p>
+</div>
+
+<h2>Do it for real</h2>
+<p>Two short tasks, one per door. Each takes under ten minutes.</p>
+
+<div class="task">
+  <h3><span class="tag work">Work</span> Task A: find your label and prove the grounding</h3>
+  <ol>
+    <li>Sign in at <code>copilot.cloud.microsoft</code> with your work account.</li>
+    <li>Read the label under your name. Note the exact wording.</li>
+    <li>Ask: <em>"What did I commit to doing in emails and meetings this week? List each with who it was to."</em></li>
+    <li>If it answers from your real mail and calendar, you have M365 Copilot (Premium). If it asks you to upload something, you have a lower level and we re-plan.</li>
+  </ol>
+</div>
+
+<div class="task">
+  <h3><span class="tag mac">Mac</span> Task B: one Researcher run</h3>
+  <ol>
+    <li>Open the Copilot app on the Mac, signed in with your personal account.</li>
+    <li>Go to Chat, then <strong>Agents</strong>, then <strong>Researcher</strong>.</li>
+    <li>Ask something you actually need for work, specific and scoped, for example: <em>"Compare the three Microsoft 365 Copilot licence levels for what each can see, with a table, citing Microsoft pages only."</em></li>
+    <li>When it asks clarifying questions, answer them or say "Go ahead". Note how long it takes and whether the citations are real.</li>
+  </ol>
+</div>
+
+<h2>Primary source to read</h2>
+<p>Read the first two sections of <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview">What is Microsoft Copilot? (Microsoft Learn)</a>, up to "Data security and privacy". It is the page everything in this lesson came from, and it carries the licence table you will keep returning to.</p>
+
+<footer class="lesson">
+  <p>Reference sheets: <a href="../reference/copilot-map.html">Copilot map</a> · <a href="../reference/glossary.html">Glossary</a>.</p>
+  <p>Anything unclear, ask your teacher in the terminal. Bring back the label from Task A; it decides what Lesson 2 can assume.</p>
+</footer>
+</main>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

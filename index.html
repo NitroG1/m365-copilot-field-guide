@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copilot Field Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column on the phone; on wide screens a fixed chapter rail on the left and the same column centred in the remaining space. */
+:root {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --fg: #1b1f27;
+  --muted: #5b6270;
+  --rule: #d8dce4;
+  --accent: #1f5f8b;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4eef6;
+  --mac: #6a3fa0;
+  --mac-soft: #efe8f8;
+  --work: #0f6e56;
+  --work-soft: #e2f3ec;
+  --ok: #1f7a3a;
+  --ok-soft: #e4f3e8;
+  --bad: #a3321d;
+  --bad-soft: #f9e5e0;
+  --display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Serif", Georgia, serif;
+  --ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171c; --surface: #1c2026; --fg: #e6e8ec; --muted: #a4abb7; --rule: #323842;
+    --accent: #7db4dc; --accent-ink: #0f1a24; --accent-soft: #1d2b38;
+    --mac: #c7a8f2; --mac-soft: #2a2238; --work: #7fd3b4; --work-soft: #19302a;
+    --ok: #7fd09a; --ok-soft: #1c2e22; --bad: #f0907a; --bad-soft: #3a1f19;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14171c; --surface: #1c2026; --fg: #e6e8ec; --muted: #a4abb7; --rule: #323842;
+  --accent: #7db4dc; --accent-ink: #0f1a24; --accent-soft: #1d2b38;
+  --mac: #c7a8f2; --mac-soft: #2a2238; --work: #7fd3b4; --work-soft: #19302a;
+  --ok: #7fd09a; --ok-soft: #1c2e22; --bad: #f0907a; --bad-soft: #3a1f19;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.shell { display: grid; grid-template-columns: 1fr; }
+.rail { display: none; }
+.page { padding-block: 1.5rem 5rem; padding-inline: 16px; max-width: 44rem; margin: 0 auto; min-width: 0; width: 100%; }
+
+/* Top chip nav for narrow screens */
+.chips { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); margin: 0 -16px; padding: .5rem 16px; border-bottom: 1px solid var(--rule); overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; font-family: var(--ui); font-size: .8rem; }
+.chips a { display: inline-block; margin-right: .4rem; padding: .25rem .6rem; border: 1px solid var(--rule); border-radius: 999px; color: var(--fg); text-decoration: none; background: var(--surface); }
+.chips a:hover { border-color: var(--accent); }
+
+@media (min-width: 980px) {
+  .shell { grid-template-columns: 16rem 1fr; }
+  .rail { display: block; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid var(--rule); background: var(--surface); padding: 1.5rem 1.2rem; font-family: var(--ui); font-size: .85rem; }
+  .rail .brand { font-family: var(--display); font-size: 1.05rem; font-weight: 600; margin-bottom: 1rem; }
+  .rail ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
+  .rail a { display: block; color: var(--fg); text-decoration: none; padding: .35rem .5rem; border-radius: 4px; }
+  .rail a:hover { background: var(--accent-soft); }
+  .rail .n { color: var(--muted); font-family: var(--mono); font-size: .75rem; margin-right: .4rem; }
+  .chips { display: none; }
+  .page { padding-block: 2.5rem 6rem; padding-inline: 2rem; }
+}
+
+header.hero { padding-block: 1.5rem 1rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.5rem; }
+.eyebrow { font-family: var(--ui); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--display); font-weight: 500; font-size: clamp(1.9rem, 5vw, 2.6rem); line-height: 1.12; margin: .3rem 0 .6rem; text-wrap: balance; }
+.lede { font-size: 1.1rem; color: var(--muted); margin: 0 0 1rem; }
+.meta { font-family: var(--ui); font-size: .8rem; color: var(--muted); }
+h2 { font-family: var(--display); font-weight: 500; font-size: 1.55rem; line-height: 1.2; margin: 3rem 0 .4rem; text-wrap: balance; }
+h2 .n { font-family: var(--mono); font-size: .8rem; color: var(--muted); display: block; margin-bottom: .2rem; }
+h3 { font-family: var(--ui); font-weight: 600; font-size: 1rem; margin: 1.6rem 0 .4rem; }
+p { margin: 0 0 1rem; }
+ul, ol { padding-left: 1.3rem; margin: 0 0 1rem; }
+li { margin-bottom: .35rem; }
+code { font-family: var(--mono); font-size: .85em; background: var(--accent-soft); padding: .08em .35em; border-radius: 3px; }
+
+.tag { display: inline-block; font-family: var(--ui); font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: .12em .5em; border-radius: 999px; vertical-align: middle; }
+.tag.mac { color: var(--mac); background: var(--mac-soft); }
+.tag.work { color: var(--work); background: var(--work-soft); }
+.tag.both { color: var(--ok); background: var(--ok-soft); }
+
+.table-wrap { overflow-x: auto; margin: 1rem 0 1.4rem; }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; min-width: 30rem; }
+th, td { text-align: left; vertical-align: top; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--ui); font-weight: 600; font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+.note { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: .8rem 1rem; margin: 1.2rem 0; font-size: .95rem; }
+.note b { font-family: var(--ui); }
+.know { font-family: var(--ui); font-size: .88rem; color: var(--muted); border-top: 1px dashed var(--rule); padding-top: .5rem; margin-top: 1rem; }
+.know b { color: var(--fg); }
+.task { border: 1px solid var(--rule); background: var(--surface); border-radius: 6px; padding: 1rem 1.2rem; margin: 1rem 0; }
+.task h3 { margin-top: 0; }
+.cite { font-family: var(--ui); font-size: .78rem; color: var(--muted); margin-top: -.4rem; }
+
+.doors { display: grid; grid-template-columns: 1fr; gap: .8rem; margin: 1rem 0 1.4rem; }
+@media (min-width: 640px) { .doors { grid-template-columns: 1fr 1fr; } }
+.door { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: .9rem 1rem; min-width: 0; }
+.door .k { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.door h3 { margin: .2rem 0 .3rem; }
+.door p { margin: 0; font-size: .92rem; }
+
+/* quiz */
+.quiz { border: 1px solid var(--rule); background: var(--surface); border-radius: 6px; padding: 1rem 1.2rem; margin: 1.2rem 0; font-family: var(--ui); }
+.quiz .q { margin: 0 0 .6rem; font-weight: 600; }
+.quiz .opts { display: grid; gap: .4rem; }
+.quiz button.opt { text-align: left; font: inherit; font-size: .95rem; padding: .55rem .8rem; border-radius: 5px; border: 1px solid var(--rule); background: transparent; color: var(--fg); cursor: pointer; }
+.quiz button.opt:hover { border-color: var(--accent); }
+.quiz button.opt[data-state="right"] { background: var(--ok-soft); border-color: var(--ok); }
+.quiz button.opt[data-state="wrong"] { background: var(--bad-soft); border-color: var(--bad); }
+.quiz button.opt:disabled { cursor: default; }
+.quiz .feedback { margin: .6rem 0 0; font-size: .9rem; min-height: 1.3em; }
+.quiz .feedback.right { color: var(--ok); }
+.quiz .feedback.wrong { color: var(--bad); }
+.quiz .why { margin: .4rem 0 0; font-size: .9rem; color: var(--muted); }
+.scorebar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 6; background: var(--surface); border-top: 1px solid var(--rule); padding: .5rem 16px; padding-bottom: calc(.5rem + env(safe-area-inset-bottom, 0px)); font-family: var(--ui); font-size: .85rem; color: var(--muted); display: none; }
+.scorebar.show { display: block; }
+@media (min-width: 980px) { .scorebar { left: 16rem; } }
+footer.end { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 1rem; font-family: var(--ui); font-size: .85rem; color: var(--muted); }
+</style>
+
+<div class="shell">
+<nav class="rail" aria-label="Chapters">
+  <div class="brand">Copilot Field Guide</div>
+  <ol>
+    <li><a href="#ch1"><span class="n">01</span>Two products, one name</a></li>
+    <li><a href="#ch2"><span class="n">02</span>The four doors</a></li>
+    <li><a href="#ch3"><span class="n">03</span>Copilot inside the apps</a></li>
+    <li><a href="#ch4"><span class="n">04</span>Researcher and Analyst</a></li>
+    <li><a href="#ch5"><span class="n">05</span>Cowork, the one that acts</a></li>
+    <li><a href="#ch6"><span class="n">06</span>Building agents</a></li>
+    <li><a href="#ch7"><span class="n">07</span>What already changed</a></li>
+    <li><a href="#ch8"><span class="n">08</span>Translation table</a></li>
+    <li><a href="#ch9"><span class="n">09</span>The learning plan</a></li>
+    <li><a href="#ch10"><span class="n">10</span>Glossary</a></li>
+  </ol>
+</nav>
+
+<main class="page">
+<nav class="chips" aria-label="Chapters">
+  <a href="#ch1">1 Products</a><a href="#ch2">2 Doors</a><a href="#ch3">3 In-app</a><a href="#ch4">4 Agents</a><a href="#ch5">5 Cowork</a><a href="#ch6">6 Building</a><a href="#ch7">7 Changes</a><a href="#ch8">8 Translate</a><a href="#ch9">9 Plan</a><a href="#ch10">10 Glossary</a>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">Reading companion to the NotebookLM podcast</div>
+  <h1>Copilot Field Guide</h1>
+  <p class="lede">Microsoft 365 Copilot and Microsoft 365 Premium, explained for someone who already runs Claude Code every day and has never opened Copilot on purpose.</p>
+  <p class="meta">Ten short chapters, each with a self-marking check. Everything here was read from Microsoft's own pages between 8 and 13 October 2026, and dated where it matters. <span class="tag mac">Mac</span> marks the personal Premium plan you practise on at home. <span class="tag work">Work</span> marks the Microsoft 365 Copilot add-on at your job.</p>
+</header>
+
+<!-- 1 -->
+<h2 id="ch1"><span class="n">Chapter 1</span>Two products, one name</h2>
+<p>The single most useful fact: the Copilot on your Mac and the Copilot at work are different products that share a brand. Neither can see the other's data, and each has features the other lacks.</p>
+<div class="table-wrap">
+<table>
+<tr><th></th><th><span class="tag mac">Mac</span> Microsoft 365 Premium</th><th><span class="tag work">Work</span> Microsoft 365 Copilot</th></tr>
+<tr><td>Sign in with</td><td>Personal Microsoft account</td><td>Work account (Entra)</td></tr>
+<tr><td>What it is</td><td>A home subscription for 1 to 6 people. Copilot in the Office apps, the Copilot app, Researcher, the highest home usage limits. AI features are for the account owner only.</td><td>An add-on licence on top of a business Microsoft 365 plan. Three levels, below.</td></tr>
+<tr><td>Grounded in</td><td>The web, plus files you upload or have open</td><td>At the top level: web <em>plus</em> your email, files, meetings, calendar and Teams, automatically</td></tr>
+<tr><td>Price</td><td>19.99 USD a month in the US at launch</td><td>Set by your employer</td></tr>
+</table>
+</div>
+<p class="cite">Sources: <a href="https://support.microsoft.com/en-us/office/introducing-microsoft-365-premium">Introducing Microsoft 365 Premium</a>, <a href="https://www.microsoft.com/en-us/copilot/blog/2025/10/01/meet-microsoft-365-premium-your-ai-and-productivity-powerhouse/">Meet Microsoft 365 Premium</a>.</p>
+
+<h3>The three work licence levels</h3>
+<p>At work, the label under your name at <code>copilot.cloud.microsoft</code> tells you which one you have.</p>
+<div class="table-wrap">
+<table>
+<tr><th>Label</th><th>Sees</th><th>Copilot in Word, Excel, PowerPoint, OneNote</th></tr>
+<tr><td><strong>Copilot Chat (Basic)</strong></td><td>Web data. Work content only if you paste, upload, or have it open in Outlook or Teams.</td><td>No</td></tr>
+<tr><td><strong>M365 Copilot (Basic)</strong></td><td>Same as above</td><td>Yes, standard priority (slower at busy times)</td></tr>
+<tr><td><strong>M365 Copilot (Premium)</strong></td><td>Web and your work data through Microsoft Graph and Work IQ, no uploading. Also Copilot Search, work-data agents, and Cowork.</td><td>Yes, priority access</td></tr>
+</table>
+</div>
+<p>Microsoft Graph is Microsoft's map of everything at work: mail, files, meetings, who reports to whom. Work IQ is the layer that lets Copilot and agents reason over that map, and it can be switched on or off. Semantic indexing sits underneath and makes search understand meaning rather than exact words.</p>
+<p class="cite">Source: <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview">What is Microsoft Copilot? (Microsoft Learn)</a></p>
+<p class="know"><b>You already know this as:</b> a chat model with no connectors (Basic) versus a model with an MCP connector to your whole workspace (Premium).</p>
+
+<div class="quiz" data-answer="1">
+  <p class="q">Check 1. Which licence reads your work email and files without you uploading them?</p>
+  <div class="opts">
+    <button class="opt">Copilot Chat (Basic) licence</button>
+    <button class="opt">Microsoft 365 Copilot (Premium)</button>
+    <button class="opt">Microsoft 365 Premium plan</button>
+    <button class="opt">Copilot inside Edge browser</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Only the work add-on's top level grounds in Graph and Work IQ automatically. The home plan shares the word Premium but never sees work data.</p>
+</div>
+
+<!-- 2 -->
+<h2 id="ch2"><span class="n">Chapter 2</span>The four doors</h2>
+<p>Every feature in this guide opens through one of four doors. Learn the doors and the rest is navigation.</p>
+<div class="doors">
+  <div class="door"><div class="k">Door 1 · both</div><h3>Chat</h3><p>Copilot Chat with a model picker (Auto, Quick response, Think deeper) and an <strong>Agents</strong> rail where Researcher and Analyst live. Opens at <code>copilot.cloud.microsoft</code>, in the Copilot app on Mac, web and phone, in Edge, and inside Outlook and Teams.</p></div>
+  <div class="door"><div class="k">Door 2 · both</div><h3>The app you are in</h3><p>Copilot inside Word, Excel, PowerPoint, Outlook, OneNote and Teams. Draft, rewrite, summarize, analyze, recap. The Copilot button sits on the Home ribbon.</p></div>
+  <div class="door"><div class="k">Door 3 · both</div><h3>Cowork</h3><p>The agent that <em>does</em> things: sends email, schedules meetings, builds files, posts in Teams, runs tasks on a schedule. It pauses for your approval before sensitive steps.</p></div>
+  <div class="door"><div class="k">Door 4 · work</div><h3>The builders</h3><p>Agent builder (no code, inside Chat) and Copilot Studio (low code, at <code>copilotstudio.microsoft.com</code>). Where your own agents get made.</p></div>
+</div>
+<p>Two more places you will meet: <strong>Pages</strong>, an editable shared canvas that chat output can be sent to, and <strong>Notebooks</strong>, a space that holds a set of sources and lets you chat over them, with auto notes and mind maps. Notebooks has a light version in the Copilot app and a full one in OneNote.</p>
+<p class="cite">Sources: <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview">What is Microsoft Copilot?</a>, <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/">Cowork overview</a>, <a href="https://techcommunity.microsoft.com/blog/microsoft-copilot-blog/what%E2%80%99s-new-in-microsoft-copilot--september-2026/4559107">What's New in Microsoft Copilot, September 2026</a>.</p>
+<p class="know"><b>You already know this as:</b> Pages is an artifact. Notebooks is NotebookLM, which is where the podcast this page accompanies was made.</p>
+
+<div class="quiz" data-answer="2">
+  <p class="q">Check 2. Which door is the one that acts rather than answers?</p>
+  <div class="opts">
+    <button class="opt">Copilot Chat window</button>
+    <button class="opt">Copilot in Word</button>
+    <button class="opt">Microsoft Copilot Cowork</button>
+    <button class="opt">Copilot Studio builder</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Chat and in-app Copilot answer and draft. Copilot Studio makes agents. Cowork is the one that sends, schedules and posts on your behalf.</p>
+</div>
+
+<!-- 3 -->
+<h2 id="ch3"><span class="n">Chapter 3</span>Copilot inside the apps</h2>
+<p>This is Stage 1 of your plan, where the hours come back. Microsoft's own one-line summary of what Copilot does in each app, verbatim in spirit:</p>
+<div class="table-wrap">
+<table>
+<tr><th>App</th><th>What Copilot does there</th><th>Where you will feel it</th></tr>
+<tr><td><strong>Outlook</strong></td><td>Drafts emails, summarizes long threads, and gives coaching tips on clarity, sentiment and tone.</td><td>Morning triage. "Summarize this thread and list what I owe."</td></tr>
+<tr><td><strong>Teams</strong></td><td>Summarizes and transcribes meetings (summaries reach back up to 30 days) and captures action items. Can rewrite your chat messages for tone and length.</td><td>Meetings you missed, and recap emails you no longer write by hand.</td></tr>
+<tr><td><strong>Word</strong></td><td>Drafts, rewrites and summarizes documents.</td><td>First drafts of reports from a bullet list or a source file.</td></tr>
+<tr><td><strong>Excel</strong></td><td>Analyzes data, generates insights, creates formulas and visuals. <span class="tag mac">Mac</span> needs the file on OneDrive with AutoSave on.</td><td>"What changed month over month, and why?"</td></tr>
+<tr><td><strong>PowerPoint</strong></td><td>Creates a deck from a prompt or an existing document, summarizes a deck, edits it (add images, deck-wide formatting).</td><td>Status decks from the Word doc you already wrote.</td></tr>
+<tr><td><strong>OneNote</strong></td><td>Drafts plans, ideas and lists.</td><td>Meeting prep notes.</td></tr>
+<tr><td><strong>Forms</strong></td><td>Drafts questions for surveys and polls.</td><td>Team feedback forms.</td></tr>
+</table>
+</div>
+<p class="cite">Source: <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview">What is Microsoft Copilot?</a>, section "Copilot features in Microsoft 365 apps".</p>
+
+<h3>Early-access extras on the home plan <span class="tag mac">Mac</span></h3>
+<ul>
+  <li><strong>Office Agent</strong>: one prompt produces a document, a spreadsheet or a presentation.</li>
+  <li><strong>Agent Mode</strong> in Excel and Word: expert-level output from a single prompt, iterating on the file itself.</li>
+  <li><strong>Actions</strong>: Copilot carries out web tasks for you. Not available in the European Economic Area.</li>
+  <li><strong>Vision</strong>: Copilot looks at your screen or camera and talks you through what it sees.</li>
+</ul>
+<p class="cite">Source: <a href="https://www.microsoft.com/en-us/copilot/blog/2025/10/01/meet-microsoft-365-premium-your-ai-and-productivity-powerhouse/">Meet Microsoft 365 Premium</a>. Whether any of these are enabled in your work tenant is not verified.</p>
+<div class="note"><b>Prompt craft, in one line.</b> Microsoft's own tip for Researcher applies everywhere: say what the output is for. Not "write a report for my review" but "write a report on my impact on the Contoso project for my performance review." Specific scope, specific audience, specific format.</div>
+
+<div class="quiz" data-answer="0">
+  <p class="q">Check 3. Copilot in Excel on the home plan needs the file to be where?</p>
+  <div class="opts">
+    <button class="opt">On OneDrive with AutoSave</button>
+    <button class="opt">On the local disk</button>
+    <button class="opt">In a Teams channel</button>
+    <button class="opt">Attached to an email</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Microsoft's Premium page states Copilot in Excel requires AutoSave and a file saved to OneDrive. A local file shows no Copilot.</p>
+</div>
+
+<!-- 4 -->
+<h2 id="ch4"><span class="n">Chapter 4</span>Researcher and Analyst</h2>
+<p>Microsoft ships two reasoning agents inside Chat. Both live under <strong>Agents</strong>.</p>
+<h3>Researcher <span class="tag both">both</span></h3>
+<p>A multistep research agent. You type a topic or question. It may ask clarifying questions; answer them, or just say "Go ahead". It then returns a structured report with key insights, cited sources and next steps, sometimes with charts. At work it can draw on your files, emails, meetings and chats, under the same permissions you already have, and you can scope it to work sources, the web, or both.</p>
+<ul>
+  <li><strong>Model choice:</strong> pick GPT or Claude from a dropdown. Claude needs your admin to allow Anthropic models first.</li>
+  <li><strong>Model Council</strong> runs the same question through several reasoning agents at once. <strong>Computer Use</strong> lets Researcher browse sites and handle sign-ins. Both are Frontier, Microsoft's early-access program for work tenants.</li>
+  <li>Researcher also runs inside a Notebook.</li>
+</ul>
+<p class="cite">Sources: <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot">Get started with Researcher</a>, <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent">What is Researcher Agent</a>.</p>
+<h3>Analyst</h3>
+<p>The data-analysis agent. It reasons over spreadsheets and data and turns raw numbers into findings. Microsoft listed it as "coming soon" for the home plan at the October 2025 launch, so check the Agents rail on the Mac before planning around it. At work it depends on your admin having enabled it.</p>
+<p class="cite">Source: <a href="https://www.microsoft.com/en-us/copilot/blog/2025/10/01/meet-microsoft-365-premium-your-ai-and-productivity-powerhouse/">Meet Microsoft 365 Premium</a>.</p>
+<p class="know"><b>You already know this as:</b> Researcher is a deep-research mode. Analyst is a code-interpreter tool.</p>
+
+<div class="quiz" data-answer="2">
+  <p class="q">Check 4. What does Researcher do when your question is vague?</p>
+  <div class="opts">
+    <button class="opt">Refuses and ends chat</button>
+    <button class="opt">Guesses and reports anyway</button>
+    <button class="opt">Asks you clarifying questions</button>
+    <button class="opt">Searches only the web</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>It asks follow-up questions to narrow the scope. You can answer them or say "Go ahead" to let it proceed.</p>
+</div>
+
+<!-- 5 -->
+<h2 id="ch5"><span class="n">Chapter 5</span>Cowork, the one that acts</h2>
+<p>Cowork is the piece that maps most directly onto what you do with Claude Code all day. Microsoft's description: "Rather than describing what you could do, it does the work." You describe a task. It breaks it into steps, works through them visibly, and pauses for your approval before anything sensitive such as sending or posting. You can interrupt, steer, pause or cancel at any point.</p>
+<h3>What it can do</h3>
+<ul>
+  <li><strong>Communication:</strong> draft and send email, reply and forward, sort your inbox into folders, post in Teams channels and chats, send HTML newsletters.</li>
+  <li><strong>Documents:</strong> create Word, Excel, PowerPoint and PDF files from scratch, edit existing Office files in OneDrive and SharePoint without breaking sharing, create and reorganize folders.</li>
+  <li><strong>Calendar:</strong> schedule meetings in natural language, move things, decline conflicts with a note to the organizer, daily briefing, meeting prep.</li>
+  <li><strong>Research:</strong> search across the organization, deep research across sources into a report.</li>
+  <li><strong>Automation:</strong> run a prompt on a schedule, or when something happens such as an email or Teams message arriving.</li>
+</ul>
+<h3>Skills and plugins</h3>
+<p>Cowork works by loading <strong>skills</strong> during a session. Built-in ones include Word, Excel, PowerPoint, PDF, Email, Scheduling, Calendar Management, Meetings, Daily Briefing, Enterprise Search, Communications, Deep Research, Adaptive Cards, and App. You can write up to 50 <strong>custom skills</strong> of your own, which Cowork discovers at the start of every session. <strong>Plugins</strong> from the Microsoft 365 App Store add more skills and connectors, and an admin can deploy them for everyone.</p>
+<p>The <strong>App skill</strong> builds a small interactive app from a description, no code, and lets you refine and share it. It is a Frontier preview.</p>
+<h3>Where and on which plan</h3>
+<p>Browser at <code>copilot.cloud.microsoft</code>, the Copilot desktop app for Mac and Windows, and the phone app. Generally available for work accounts (billed by usage). In preview for personal accounts, and personal Cowork needs Premium or Pro. Approvals carry a risk level for medium and high risk actions, and you can tell it to stop asking for a given kind of action.</p>
+<p class="cite">Source: <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/">Copilot Cowork overview (Microsoft Learn)</a>, page dated 29 September 2026.</p>
+<p class="know"><b>You already know this as:</b> Claude Code, or Claude's own Cowork. Custom skills are SKILL.md files. Scheduled prompts are cron jobs. The approval step is the permission prompt.</p>
+
+<div class="quiz" data-answer="1">
+  <p class="q">Check 5. Before Cowork sends an email it...</p>
+  <div class="opts">
+    <button class="opt">Logs it for admins</button>
+    <button class="opt">Pauses for your approval</button>
+    <button class="opt">Checks spelling and tone</button>
+    <button class="opt">Schedules it for later</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Sensitive actions such as Send or Post wait for your go-ahead, with a risk indicator. You can skip future prompts for similar actions if you choose.</p>
+</div>
+
+<!-- 6 -->
+<h2 id="ch6"><span class="n">Chapter 6</span>Building agents, no-code to pro-code</h2>
+<p>Stage 2 of your plan. An agent in Microsoft's vocabulary is a scoped version of Copilot with its own <strong>knowledge</strong> (instructions and data sources) and <strong>actions</strong> (things it can do), on top of an <strong>orchestrator</strong> and <strong>foundation models</strong>. The ladder from no code to full code:</p>
+<ol>
+  <li><strong>Agent builder</strong> inside Copilot Chat <span class="tag work">Work</span>. Describe the agent, point it at knowledge sources, done. No code.</li>
+  <li><strong>Copilot Studio</strong> <span class="tag work">Work</span>. A graphical low-code studio. You build three kinds of thing: <em>agents</em> (conversational, task-completing), <em>workflows</em> (drag-and-drop automations where each step can reason), and <em>agent flows</em> (the older Power Automate-style flow, attachable to an agent as a tool). It has analytics, evaluations with test sets, and an admin inventory. You can also describe a business goal in plain language and let it propose the agents and workflows.</li>
+  <li><strong>Microsoft 365 Agents Toolkit</strong> in VS Code, plus <strong>Work IQ Dev Tools</strong> (a terminal tool, in preview) that scaffolds, validates, packages and publishes agents.</li>
+</ol>
+<h3>Copilot Studio's three harnesses</h3>
+<p>A harness is the engine an agent runs on, and it decides how it reasons and how it is billed. The <strong>GitHub Copilot harness</strong> for reasoning-heavy multi-step work. The <strong>standard harness</strong> for rule-based agents built from topics, which are scripted conversation branches. The <strong>Copilot chat harness</strong> for extending Copilot Chat with your company's knowledge.</p>
+<h3>Declarative versus custom engine</h3>
+<div class="table-wrap">
+<table>
+<tr><th></th><th>Declarative agent</th><th>Custom engine agent</th></tr>
+<tr><td>Model and orchestrator</td><td>Copilot's own</td><td>Yours (Azure, Semantic Kernel, LangChain, any model)</td></tr>
+<tr><td>Hosting</td><td>None needed, lives in Microsoft 365</td><td>You host it, usually Azure, at extra cost</td></tr>
+<tr><td>Proactive triggers</td><td>No, user-initiated only</td><td>Yes, can start work on its own</td></tr>
+<tr><td>Group use in a Teams channel</td><td>Designed for individuals</td><td>Supports groups, agent-to-agent handoff</td></tr>
+<tr><td>Compliance</td><td>Inherits Microsoft 365's</td><td>Your responsibility</td></tr>
+<tr><td>Tooling</td><td>Agent builder, Copilot Studio, Agents Toolkit</td><td>Copilot Studio, Agents Toolkit, .NET, Python, JavaScript</td></tr>
+</table>
+</div>
+<p>Microsoft's rule of thumb: build declarative when the work stays inside Microsoft 365 apps and you want speed and inherited compliance. Build custom engine when you need your own models, complex orchestration, proactive messaging, or an existing assistant brought into Copilot.</p>
+<p class="cite">Sources: <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agents-overview">Compare declarative and custom engine agents</a>, <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio">Copilot Studio overview</a>. Whether your admin has turned on Copilot Studio or Agent builder for you is not verified.</p>
+<p class="know"><b>You already know this as:</b> a declarative agent is a system prompt plus tools, hosted for you, like a Claude Project. A custom engine agent is your own Agent SDK app. The Agents Toolkit is the SDK plus scaffolding.</p>
+
+<div class="quiz" data-answer="3">
+  <p class="q">Check 6. A custom engine agent differs from a declarative one because you...</p>
+  <div class="opts">
+    <button class="opt">Pay nothing for hosting</button>
+    <button class="opt">Must use Copilot's model</button>
+    <button class="opt">Cannot publish to Teams</button>
+    <button class="opt">Bring your own orchestrator</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Custom engine means your model and your orchestrator, hosted outside Microsoft 365. That is what buys proactive triggers and group use, at the cost of owning compliance.</p>
+</div>
+
+<!-- 7 -->
+<h2 id="ch7"><span class="n">Chapter 7</span>What already changed</h2>
+<p>Microsoft reshapes this surface monthly. Three changes matter for anything you read elsewhere:</p>
+<ul>
+  <li><strong>18 August 2026:</strong> Deep Research, Podcasts and Group Chat were retired from the home Copilot app. Researcher is now the research agent on both home and work. Group Chat threads and images were not carried forward.</li>
+  <li><strong>Copilot Tasks moved into Cowork.</strong> Conversations migrated, Tasks memories did not, shared links stopped working, and scheduled tasks were switched off by default. Personal and Family subscribers lost Cowork; Premium or Pro is needed.</li>
+  <li><strong>Names:</strong> "Microsoft 365 Copilot Chat" is now "Microsoft Copilot Chat", and the work address is <code>copilot.cloud.microsoft</code>. Older guides use the old names.</li>
+</ul>
+<p>Keep the monthly "What's New in Microsoft 365 Copilot" post on the Tech Community blog as your drift check.</p>
+<p class="cite">Sources: <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/learning/changes-microsoft-copilot-app">Copilot app updates for personal, work and school accounts</a>, <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview">What is Microsoft Copilot?</a>.</p>
+
+<div class="quiz" data-answer="0">
+  <p class="q">Check 7. Deep Research in the home Copilot app was...</p>
+  <div class="opts">
+    <button class="opt">Retired, Researcher replaces it</button>
+    <button class="opt">Renamed to Copilot Search</button>
+    <button class="opt">Moved into Copilot Studio</button>
+    <button class="opt">Merged into Copilot Notebooks</button>
+  </div>
+  <p class="feedback"></p>
+  <p class="why" hidden>Retired on 18 August 2026. If a tutorial says Deep Research, it predates that date.</p>
+</div>
+
+<!-- 8 -->
+<h2 id="ch8"><span class="n">Chapter 8</span>Translation table</h2>
+<p>Your fastest route in. Each Microsoft name next to the thing you already use.</p>
+<div class="table-wrap">
+<table>
+<tr><th>Microsoft says</th><th>You already use</th><th>Difference worth knowing</th></tr>
+<tr><td>Cowork</td><td>Claude Code, Claude Cowork</td><td>Acts inside Microsoft 365 only. Approval per sensitive step, with a risk level.</td></tr>
+<tr><td>Cowork custom skill</td><td>SKILL.md</td><td>Up to 50. Auto-discovered each session.</td></tr>
+<tr><td>Scheduled or event-driven task</td><td>cron, a hook</td><td>Triggers include an email or Teams message arriving.</td></tr>
+<tr><td>Declarative agent</td><td>Claude Project, a skill</td><td>Instructions, knowledge, API actions. Copilot's model. No hosting.</td></tr>
+<tr><td>Custom engine agent</td><td>Agent SDK app</td><td>Your model, your host, your compliance.</td></tr>
+<tr><td>Agents Toolkit</td><td>Agent SDK plus scaffolding</td><td>VS Code extension.</td></tr>
+<tr><td>Microsoft Graph, Work IQ</td><td>MCP connectors</td><td>Already wired to mail, files, meetings, Teams. Admin controls what it sees.</td></tr>
+<tr><td>Copilot connectors, plugins</td><td>MCP servers</td><td>Bring outside systems in. Admin-deployable.</td></tr>
+<tr><td>Researcher</td><td>Deep research mode</td><td>Clarifies first. Can run GPT or Claude.</td></tr>
+<tr><td>Analyst</td><td>Code interpreter</td><td>"Coming soon" on the home plan at launch.</td></tr>
+<tr><td>Pages</td><td>Artifact</td><td>Shared and co-edited inside Microsoft 365.</td></tr>
+<tr><td>Notebooks</td><td>NotebookLM</td><td>Auto notes and mind maps. Full version in OneNote.</td></tr>
+<tr><td>Think deeper</td><td>Extended thinking</td><td>Auto routes per prompt unless you choose.</td></tr>
+<tr><td>Frontier</td><td>Beta program</td><td>Gates Model Council, Computer Use, the App skill.</td></tr>
+</table>
+</div>
+
+<!-- 9 -->
+<h2 id="ch9"><span class="n">Chapter 9</span>The learning plan</h2>
+<p>Three stages, in order, agreed on 10 October 2026. Twenty to thirty minutes a day, one lesson per sitting, one real task at work the next day. Practise on the Mac, apply at work.</p>
+<ol>
+  <li><strong>Hours back each week.</strong> Email triage, meeting prep and recaps, first drafts of documents and decks move to Copilot and Cowork. Success: you can name which tasks moved and roughly how much time came back.</li>
+  <li><strong>Ship one agent.</strong> Built in Agent builder or Copilot Studio, published in the work tenant, used by at least one colleague for a recurring task. No-code first, then toward pro-code with the Agents Toolkit.</li>
+  <li><strong>Be the team's Copilot person.</strong> Demo it, answer questions, set up prompts, agents and workflows for others.</li>
+</ol>
+<h3>Official material to lean on</h3>
+<ul>
+  <li><strong>Copilot Academy</strong> <span class="tag work">Work</span>: Microsoft's guided courses inside Viva Learning (Teams or web), with paths per app, per agent, and per role. Open Viva Learning, Academies tab, Microsoft Copilot Academy.</li>
+  <li><strong>Copilot Prompt Gallery</strong> at <code>copilot.cloud.microsoft/prompts</code>: example work prompts to seed daily practice.</li>
+  <li><strong>Microsoft Learn path</strong> "Transform ideas into action with Copilot": free course on prompt craft and getting started.</li>
+  <li><strong>Copilot Success Kit</strong> and <strong>Trainer Kit</strong> on the adoption site: the material you will reuse in Stage 3.</li>
+</ul>
+<p class="cite">Sources: <a href="https://support.microsoft.com/en-US/Microsoft-365-Copilot/copilot-academy-guided-learning-for-microsoft-365-copilot">Copilot Academy</a>, <a href="https://adoption.microsoft.com/en-us/copilot/skilling-center/">Copilot skilling center</a>, <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview">What is Microsoft Copilot?</a> ("Train your users").</p>
+
+<div class="task">
+  <h3><span class="tag work">Work</span> First task: find your label and prove the grounding</h3>
+  <ol>
+    <li>Sign in at <code>copilot.cloud.microsoft</code> with your work account.</li>
+    <li>Read the label under your name. Note the exact wording.</li>
+    <li>Ask: "What did I commit to doing in emails and meetings this week? List each with who it was to."</li>
+    <li>If it answers from your real mail and calendar, you have M365 Copilot (Premium). If it asks you to upload something, you have a lower level and the plan changes.</li>
+  </ol>
+</div>
+<div class="task">
+  <h3><span class="tag mac">Mac</span> Second task: one Researcher run</h3>
+  <ol>
+    <li>Open the Copilot app on the Mac with your personal account.</li>
+    <li>Chat, then Agents, then Researcher.</li>
+    <li>Ask something you need for work, scoped and specific. Answer its clarifying questions or say "Go ahead".</li>
+    <li>Note how long it takes and whether the citations are real.</li>
+  </ol>
+</div>
+<div class="task">
+  <h3><span class="tag work">Work</span> Third task: one Cowork task with approval</h3>
+  <ol>
+    <li>Open the Cowork tab at <code>copilot.cloud.microsoft</code>.</li>
+    <li>Ask: "Draft a short recap of my last meeting with [name] and send it to them." Watch the steps appear.</li>
+    <li>When it pauses at Send, read the draft. Approve or cancel.</li>
+    <li>Then ask it to schedule that same recap to run every Friday. You have just made your first automation.</li>
+  </ol>
+</div>
+
+<!-- 10 -->
+<h2 id="ch10"><span class="n">Chapter 10</span>Glossary</h2>
+<div class="table-wrap">
+<table>
+<tr><th>Term</th><th>Meaning</th></tr>
+<tr><td>Agent</td><td>A scoped Copilot with its own instructions, knowledge and actions.</td></tr>
+<tr><td>Agent builder</td><td>No-code agent creation inside Copilot Chat.</td></tr>
+<tr><td>Agent flow</td><td>Copilot Studio's older flow format, Power Automate-like, attachable to an agent as a tool.</td></tr>
+<tr><td>Agents Toolkit</td><td>Microsoft 365 Agents Toolkit, the VS Code extension for building agents in code.</td></tr>
+<tr><td>Analyst</td><td>Prebuilt data-analysis agent.</td></tr>
+<tr><td>Copilot Academy</td><td>Microsoft's guided course hub inside Viva Learning. Work account required.</td></tr>
+<tr><td>Copilot Chat</td><td>The chat surface, at copilot.cloud.microsoft, in the Copilot app, Edge, Outlook and Teams.</td></tr>
+<tr><td>Copilot Search</td><td>One search across all Microsoft 365 apps and connected sources. Work only.</td></tr>
+<tr><td>Copilot Studio</td><td>Low-code studio for agents, workflows and agent flows.</td></tr>
+<tr><td>Cowork</td><td>The agent that acts on your behalf across Microsoft 365, with approvals.</td></tr>
+<tr><td>Custom engine agent</td><td>Agent where you bring the model and orchestrator and host it yourself.</td></tr>
+<tr><td>Declarative agent</td><td>Agent using Copilot's model and orchestrator with your instructions, knowledge and actions.</td></tr>
+<tr><td>Enterprise Data Protection</td><td>The contractual promise that prompts and responses at work get the same protection as mail and files.</td></tr>
+<tr><td>Frontier</td><td>Microsoft's early-access preview program for work tenants.</td></tr>
+<tr><td>Grounding</td><td>Feeding the model facts from a source before it answers.</td></tr>
+<tr><td>Harness</td><td>The engine an agent runs on in Copilot Studio. Three: GitHub Copilot, standard, Copilot chat.</td></tr>
+<tr><td>Microsoft Graph</td><td>Microsoft's map of your work data: mail, files, meetings, calendar, Teams, org chart.</td></tr>
+<tr><td>Notebooks</td><td>A space that holds sources and lets you chat over them.</td></tr>
+<tr><td>Pages</td><td>An editable, shareable canvas for chat output.</td></tr>
+<tr><td>Researcher</td><td>Prebuilt multistep research agent with cited reports.</td></tr>
+<tr><td>Semantic indexing</td><td>Search that understands meaning, not just exact words, over Graph data.</td></tr>
+<tr><td>Skill (Cowork)</td><td>A task-specific capability Cowork loads during a session. Up to 50 custom ones.</td></tr>
+<tr><td>Topic</td><td>A scripted conversation branch in a standard-harness Copilot Studio agent.</td></tr>
+<tr><td>Work IQ</td><td>The layer that lets Copilot and agents reason over work data, content and tools. Can be switched off.</td></tr>
+</table>
+</div>
+
+<footer class="end">
+  <p>Companion to the NotebookLM notebook <a href="https://notebook.google.com/notebook/b3bcf2b8-e7a8-4a49-b44f-586feaf05a4a">Microsoft 365 Copilot: capabilities and the learning plan</a>. The notebook holds the same Microsoft pages as sources, the two-host podcast under Audio Overview, and a briefing document. Ask the teacher in the terminal anything that did not land.</p>
+  <p>All sources: <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview">What is Microsoft Copilot?</a> · <a href="https://support.microsoft.com/en-us/office/introducing-microsoft-365-premium">Introducing Microsoft 365 Premium</a> · <a href="https://www.microsoft.com/en-us/copilot/blog/2025/10/01/meet-microsoft-365-premium-your-ai-and-productivity-powerhouse/">Meet Microsoft 365 Premium</a> · <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/learning/changes-microsoft-copilot-app">Copilot app updates</a> · <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/">Cowork overview</a> · <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot">Get started with Researcher</a> · <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent">What is Researcher Agent</a> · <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agents-overview">Declarative vs custom engine agents</a> · <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio">Copilot Studio overview</a> · <a href="https://support.microsoft.com/en-US/Microsoft-365-Copilot/copilot-academy-guided-learning-for-microsoft-365-copilot">Copilot Academy</a> · <a href="https://adoption.microsoft.com/en-us/copilot/skilling-center/">Copilot skilling center</a></p>
+</footer>
+</main>
+</div>
+<div class="scorebar" id="scorebar"></div>
+
+<script>
+(function () {
+  var quizzes = document.querySelectorAll('.quiz');
+  var score = { right: 0, done: 0, total: quizzes.length };
+  var bar = document.getElementById('scorebar');
+  function render() {
+    if (!bar) return;
+    if (score.done === 0) { bar.className = 'scorebar'; return; }
+    bar.className = 'scorebar show';
+    bar.textContent = 'Checks: ' + score.right + ' right of ' + score.done + ' answered' +
+      (score.done === score.total ? ', all ' + score.total + ' done' : ', ' + (score.total - score.done) + ' to go');
+  }
+  quizzes.forEach(function (quiz) {
+    var answer = parseInt(quiz.getAttribute('data-answer'), 10);
+    var opts = quiz.querySelectorAll('button.opt');
+    var feedback = quiz.querySelector('.feedback');
+    var why = quiz.querySelector('.why');
+    opts.forEach(function (btn, i) {
+      btn.addEventListener('click', function () {
+        if (quiz.dataset.done) return;
+        quiz.dataset.done = '1';
+        var right = i === answer;
+        btn.dataset.state = right ? 'right' : 'wrong';
+        if (!right) opts[answer].dataset.state = 'right';
+        opts.forEach(function (b) { b.disabled = true; });
+        if (feedback) {
+          feedback.textContent = right ? 'Right.' : 'Not that one.';
+          feedback.className = 'feedback ' + (right ? 'right' : 'wrong');
+        }
+        if (why) why.hidden = false;
+        score.done += 1; if (right) score.right += 1; render();
+      });
+    });
+  });
+})();
+</script>
