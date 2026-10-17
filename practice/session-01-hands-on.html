@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hands-on Session 1: Copilot on the Mac</title>
+<style>
+:root{--bg:#f7f5f0;--panel:#fff;--ink:#1d1d1b;--muted:#5d5a52;--line:#dcd7cc;--accent:#2d5be3;--ok:#1f7a3a;--warn:#b26a00;--bad:#b3261e;--code:#f0ede6}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#15151a;--panel:#1f1f26;--ink:#ecebe6;--muted:#a8a69e;--line:#34343d;--accent:#7f9dff;--ok:#5ccc80;--warn:#f0b05a;--bad:#ff8a80;--code:#2a2a33}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+header{padding:28px 16px 12px;max-width:820px;margin:0 auto}
+h1{font-size:30px;margin:0 0 6px;line-height:1.2}
+.lede{color:var(--muted);margin:0 0 14px}
+main{max-width:820px;margin:0 auto;padding:0 16px 80px}
+.day{margin:34px 0 10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.station{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;margin:14px 0}
+.station h2{font-size:21px;margin:0 0 2px}
+.meta{color:var(--muted);font-size:14px;margin:0 0 12px}
+.goal{margin:0 0 12px;padding:10px 12px;border-left:4px solid var(--accent);background:var(--code);border-radius:6px}
+ol{padding-left:22px;margin:8px 0 12px}
+ol li{margin:6px 0}
+.prompt{position:relative;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 12px 12px;margin:10px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;white-space:pre-wrap;word-break:break-word}
+.prompt button{position:absolute;top:8px;right:8px;font:600 13px -apple-system,sans-serif;background:var(--accent);color:#fff;border:0;border-radius:6px;padding:5px 10px;cursor:pointer}
+.prompt button.copied{background:var(--ok)}
+.prompt .label{display:block;font:600 12px -apple-system,sans-serif;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;padding-right:70px}
+.look{margin:10px 0 0}
+.look summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.look ul{margin:6px 0 0;padding-left:20px}
+.fb{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.fb .q{font-weight:600;margin-bottom:6px}
+.choices{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.choices label{border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:15px;user-select:none}
+.choices input{display:none}
+.choices label:has(input:checked){border-color:currentColor;font-weight:600}
+.choices label.ok:has(input:checked){color:var(--ok)}.choices label.part:has(input:checked){color:var(--warn)}.choices label.bad:has(input:checked){color:var(--bad)}
+textarea{width:100%;min-height:84px;font:15px/1.5 -apple-system,sans-serif;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);resize:vertical}
+.done{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:15px;color:var(--muted)}
+.done input{width:18px;height:18px}
+.saved{font-size:12px;color:var(--muted);float:right}
+.bar{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bar .inner{max-width:820px;margin:0 auto;width:100%;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bar .prog{flex:1;color:var(--muted);font-size:14px;min-width:120px}
+.bar button{font:600 14px -apple-system,sans-serif;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;padding:7px 12px;cursor:pointer}
+.bar button.primary{background:var(--accent);color:#fff}
+.note{font-size:15px;color:var(--muted)}
+kbd{font:600 13px ui-monospace,Menlo,monospace;background:var(--code);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+a{color:var(--accent)}
+.gotcha{border-left:4px solid var(--warn);background:var(--code);padding:8px 12px;border-radius:6px;margin:8px 0}
+footer{max-width:820px;margin:30px auto 0;padding:0 16px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="bar"><div class="inner">
+  <span class="prog" id="prog">0 of 10 stations done</span>
+  <button id="copyAll" class="primary">Copy all feedback for Claude</button>
+  <button id="dl">Download feedback file</button>
+</div></div>
+
+<header>
+  <h1>Hands-on Session 1: Copilot on the Mac</h1>
+  <p class="lede">Ten stations, about 85 minutes in total, split across three short days. Every station has a real prompt to paste, what to watch for as a power user, and a feedback box. Your answers save in this browser as you type. When you stop, press <strong>Copy all feedback</strong> and paste the block into the chat with Claude.</p>
+  <p class="note">Files you will need: <a href="../assets/sample-sales.csv" download>sample-sales.csv</a> (108 rows of made-up sales) and <a href="../assets/briefing.md" download>briefing.md</a> (the written briefing from the notebook). Download both to your Downloads folder before Day 1.</p>
+</header>
+
+<main>
+
+<div class="day">Day 1, about 30 minutes: the chat app</div>
+
+<section class="station" id="s1" data-n="1">
+  <h2>1. Plain chat, and the follow-up test</h2>
+  <p class="meta">5 min. Copilot app, Chat tab.</p>
+  <p class="goal">Goal: learn whether Copilot knows what plan you are on, and whether a second message keeps the context of the first.</p>
+  <ol>
+    <li>Open the Copilot app. Make sure the <strong>Chat</strong> tab (top left) is selected, then click <strong>New chat</strong>.</li>
+    <li>Paste prompt A and send it.</li>
+    <li>Without starting a new chat, paste prompt B and send it.</li>
+    <li>Look near the message box for a model or mode choice (words like <em>Quick response</em>, <em>Think Deeper</em>, or a model name). If there is one, switch it and send prompt A again in a new chat. Note any difference in depth or speed.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt A</span>I am a Microsoft 365 Premium subscriber using the Copilot app on a Mac. In five short lines, tell me what you can do for me inside this app that a plain web chatbot cannot. Be specific to my plan, and say plainly if you are not sure what plan I am on.</div>
+  <div class="prompt"><span class="label">Prompt B (same chat)</span>Turn that into a checklist of five things I can try this week, one line each, ordered from easiest to hardest.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Did it name your plan correctly, or guess? Guessing is a sign it does not see your account.</li>
+    <li>Did prompt B reuse the five lines from A, or start over? Reuse means the chat holds context.</li>
+    <li>Does the mode switch change anything you can see? Write down what, in one line.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s2" data-n="2">
+  <h2>2. Researcher: a real multi-step research job</h2>
+  <p class="meta">15 min. Copilot app, Researcher (pinned in the left rail).</p>
+  <p class="goal">Goal: run one full Researcher cycle: question, clarifying questions, plan, report with sources.</p>
+  <ol>
+    <li>Click <strong>Researcher</strong> under Pinned in the left rail.</li>
+    <li>Paste the prompt. Replace the bracket with one line about your actual job.</li>
+    <li>It will ask two to four clarifying questions. Answer each in a few words. When it offers to begin, say <strong>Go ahead</strong>.</li>
+    <li>Note the time you pressed Go ahead and the time the report arrived.</li>
+    <li>Open two of the sources it cites and check that they say what the report claims.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt</span>Research this for me. I work as [one line about your job]. I want Microsoft 365 Copilot to save me at least two hours a week across email, meetings and documents. Find what Microsoft's own documentation and independent reviewers say actually saves time, what commonly disappoints people, and end with a ranked list of the five habits I should adopt first. Cite sources for every claim.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>The clarifying questions are the product. Good answers here change the report more than a longer prompt does.</li>
+    <li>How long did it run? Researcher is slow by design. Minutes, not seconds.</li>
+    <li>Did the two sources you checked hold up? If one did not, that is worth a line in the feedback.</li>
+    <li>Look for a model or mode choice inside Researcher. If you see one, note the names.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s3" data-n="3">
+  <h2>3. Analyst: a question about a data file</h2>
+  <p class="meta">10 min. Copilot app, Analyst (pinned in the left rail). Needs sample-sales.csv.</p>
+  <p class="goal">Goal: see Analyst write and run code against your file, and show its working.</p>
+  <ol>
+    <li>Click <strong>Analyst</strong> under Pinned.</li>
+    <li>Attach <strong>sample-sales.csv</strong> from your Downloads folder (paperclip or plus icon by the message box).</li>
+    <li>Paste prompt A and send it.</li>
+    <li>When it answers, paste prompt B in the same chat.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt A</span>Analyse the attached file. Which region grew revenue the most from the first three months to the last three months, and which product is dragging total revenue down? Show one chart that makes the answer obvious, and show me the code you ran.</div>
+  <div class="prompt"><span class="label">Prompt B (same chat)</span>Now assume the Gamma product is discontinued from July. Recalculate total revenue by region for July to September and tell me which region is hurt most, as a table.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>The code it shows is Python. You do not need to read it, but check that it printed it rather than hiding it.</li>
+    <li>The honest answer for the data: East grows fastest, West shrinks most, and Gamma units drop by about a fifth across the nine months. If it says something else, the feedback box wants to know.</li>
+    <li>Did it ask before assuming what "first three months" meant, or just pick? Both are fine, but note which.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<div class="day">Day 2, about 30 minutes: notebooks, Word and Excel</div>
+
+<section class="station" id="s4" data-n="4">
+  <h2>4. Notebooks: chat that stays inside your sources</h2>
+  <p class="meta">10 min. Copilot app, Notebooks. Needs briefing.md.</p>
+  <p class="goal">Goal: build a notebook from two sources and get answers that cite only those sources.</p>
+  <ol>
+    <li>Click <strong>Notebooks</strong> in the left rail, then <strong>New notebook</strong>. Name it <em>Copilot learning</em>.</li>
+    <li>Add two sources: upload <strong>briefing.md</strong>, and add this web page as a link: <code>https://nitrog1.github.io/m365-copilot-field-guide/</code></li>
+    <li>Paste prompt A in the notebook's chat.</li>
+    <li>Then paste prompt B.</li>
+    <li>Look for a button that makes an audio overview or podcast from the notebook. If it exists, start one and note how long it takes.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt A</span>Using only the sources in this notebook, list every agent available to me on Microsoft 365 Premium. One line each on what it is for. Flag any that are described as coming soon, preview, or being retired. If the sources disagree, say so.</div>
+  <div class="prompt"><span class="label">Prompt B</span>Write me a five-question quiz on those agents. Multiple choice, four options each, answers at the end. Keep every option about the same length so the right one does not stand out.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Does every claim point back to a source? That is the whole point of a notebook over a plain chat.</li>
+    <li>Ask it something the sources do not cover, like "What does Copilot cost in Japan?" A good notebook says it cannot find that in the sources.</li>
+    <li>If the audio overview exists, this is the same idea as the NotebookLM podcast you already have. Compare them.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s5" data-n="5">
+  <h2>5. Word: draft, rewrite by talking, summarise</h2>
+  <p class="meta">10 min. Microsoft Word.</p>
+  <p class="goal">Goal: produce a document you will reuse in stations 7 and 8, using Copilot three different ways.</p>
+  <ol>
+    <li>Open Word, create a blank document, and save it to <strong>OneDrive</strong> as <em>How I will use Copilot this quarter</em>. Confirm the AutoSave switch at the top is on.</li>
+    <li>Click the Copilot button on the Home tab of the ribbon (or the Copilot icon that appears in the empty page). Choose the draft option and paste prompt A.</li>
+    <li>When the draft is in, select one paragraph. Use the small Copilot icon that appears beside the selection and ask for a rewrite with prompt B.</li>
+    <li>Open the Copilot pane on the right and paste prompt C.</li>
+    <li>Look in the Copilot pane for an <strong>Agent Mode</strong> switch. If you find it, note where it is. Do not run it yet.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt A (draft)</span>Write a one-page briefing for my manager titled "How I will use Copilot this quarter". Three sections with short headings: email and meetings, research, and one small agent I will build. Confident, plain tone, no bullet points, under 350 words.</div>
+  <div class="prompt"><span class="label">Prompt B (rewrite a selection)</span>Make this half the length and remove every adjective that does not change the meaning.</div>
+  <div class="prompt"><span class="label">Prompt C (Copilot pane)</span>Summarise this document in three sentences, then list two questions my manager is likely to ask after reading it.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Three entry points: the draft box, the selection icon, the side pane. They behave differently. Which felt fastest?</li>
+    <li>Did the rewrite keep your meaning? Read it against the original.</li>
+    <li>The two questions from prompt C are a cheap way to pressure-test any document before sending it.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s6" data-n="6">
+  <h2>6. Excel: table, new column, pivot, chart</h2>
+  <p class="meta">10 min. Microsoft Excel. Needs sample-sales.csv.</p>
+  <div class="gotcha">Gotcha: Copilot in Excel only works on a file that is saved in OneDrive with AutoSave on. A CSV on your desktop will show a greyed-out Copilot button.</div>
+  <ol>
+    <li>Open <strong>sample-sales.csv</strong> in Excel. Use File, Save As, choose OneDrive, change the format to <strong>Excel Workbook (.xlsx)</strong>, and save. Confirm AutoSave is on.</li>
+    <li>Click the Copilot button on the Home tab. Paste prompt A.</li>
+    <li>Accept the changes it proposes. Then paste prompt B.</li>
+    <li>Then paste prompt C.</li>
+    <li>Look for an <strong>Agent Mode</strong> option in the Copilot pane. If present, try prompt C again through it and note the difference.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt A</span>Format this data as a table and add a column called "revenue per unit" that divides revenue by units.</div>
+  <div class="prompt"><span class="label">Prompt B</span>Add a PivotTable on a new sheet that shows total revenue by region (rows) and by month (columns), and highlight the region with the highest total.</div>
+  <div class="prompt"><span class="label">Prompt C</span>Create a line chart of monthly revenue for each product, with a title and a legend, on a new sheet called Chart.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Does it preview the change before applying it, or apply straight away? Preview is what lets you say no.</li>
+    <li>Prompt B is the hardest. If it fails, try splitting it into two prompts and note which half failed.</li>
+    <li>Check the "revenue per unit" column against one row by hand. Alpha should be 120, Beta 85, Gamma 40.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<div class="day">Day 3, about 25 minutes: slides, Cowork, mail, and your verdict</div>
+
+<section class="station" id="s7" data-n="7">
+  <h2>7. PowerPoint: a deck from the Word document</h2>
+  <p class="meta">5 min. Microsoft PowerPoint. Needs the document from station 5.</p>
+  <ol>
+    <li>Open PowerPoint, create a new blank presentation, and open the Copilot pane.</li>
+    <li>Paste the prompt. When it asks which file, pick <em>How I will use Copilot this quarter</em> from OneDrive.</li>
+    <li>When the deck appears, ask it to <em>add speaker notes to every slide</em> as a second message.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt</span>Create a five-slide presentation from my document "How I will use Copilot this quarter". One idea per slide, a short title on each, a clean simple design, and a closing slide with the three things I am asking my manager to agree to.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Did it find the document by name, or make you browse? Finding by name means it can see your OneDrive.</li>
+    <li>Is the content from your document, or generic filler? Check slide 2 against the Word text.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s8" data-n="8">
+  <h2>8. Cowork: hand it a task across apps</h2>
+  <p class="meta">10 min. Copilot app, Cowork tab (next to Chat, top left). Cowork is in preview, so expect rough edges.</p>
+  <p class="goal">Goal: see an agent plan a task, ask permission, and act in your files.</p>
+  <ol>
+    <li>Click the <strong>Cowork</strong> tab at the top of the left rail.</li>
+    <li>Paste the prompt. Read any plan it shows before you approve it.</li>
+    <li>Approve each step it asks about. Write down what it asked permission for.</li>
+    <li>Check OneDrive afterwards for the new file.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt</span>Find my Word document "How I will use Copilot this quarter" in OneDrive. Write a three-sentence summary of it. Save that summary as a new Word document called "Copilot plan summary" in the same folder. Show me your plan and ask me before you create or change anything.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>This is the Microsoft version of what Claude Code does: a plan, then actions with approvals. Compare the feel.</li>
+    <li>Did it ask before creating the file, as the prompt demanded? If it did not, that matters.</li>
+    <li>Look for a skills or settings area inside Cowork. Note the names of any built-in skills you see.</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s9" data-n="9">
+  <h2>9. Outlook: summarise a thread, draft a reply</h2>
+  <p class="meta">5 min. Microsoft Outlook with your personal mailbox. Skip if you have no personal account signed in.</p>
+  <ol>
+    <li>Open Outlook and pick a thread with at least four messages.</li>
+    <li>Click the Copilot <strong>Summarize</strong> option at the top of the thread.</li>
+    <li>Click Reply, open the Copilot menu in the reply, choose draft, and paste the prompt (swap the name).</li>
+    <li>Look for a <em>Coaching</em> option on the Copilot menu and run it on your draft.</li>
+  </ol>
+  <div class="prompt"><span class="label">Prompt (draft reply)</span>Reply to [name] saying I have read the thread, I agree with the last suggestion, and I will send what they need by Friday. Warm, brief, no exclamation marks.</div>
+  <details class="look"><summary>What a power user watches for</summary><ul>
+    <li>Was the summary right about who said what? Mail summaries sometimes merge two people.</li>
+    <li>Coaching gives tone and clarity feedback. Is it useful, or generic?</li>
+  </ul></details>
+  <div class="fb"></div>
+</section>
+
+<section class="station" id="s10" data-n="10">
+  <h2>10. Your verdict</h2>
+  <p class="meta">5 min. No app needed.</p>
+  <p class="goal">Three questions. Short answers are fine. This is what Lesson 2 gets built from.</p>
+  <div class="fb" data-verdict="1"></div>
+</section>
+
+</main>
+<footer>Part of the <a href="../index.html">Copilot Field Guide</a>. Feedback lives only in this browser until you copy it out.</footer>
+
+<script>
+(function(){
+  const KEY='m365-session-01';
+  let state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){state={}}
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+  const stations=[...document.querySelectorAll('.station')];
+
+  stations.forEach(s=>{
+    const n=s.dataset.n, fb=s.querySelector('.fb'), st=state[n]=state[n]||{};
+    if(fb.dataset.verdict){
+      fb.innerHTML=`
+        <div class="q">Which station saved you the most time, and why?</div><textarea data-k="v1"></textarea>
+        <div class="q" style="margin-top:10px">Which station felt broken or not worth it?</div><textarea data-k="v2"></textarea>
+        <div class="q" style="margin-top:10px">If you could build one small agent for your 9-to-5 tomorrow, what would it do?</div><textarea data-k="v3"></textarea>
+        <label class="done"><input type="checkbox" data-k="done"> Finished</label>`;
+    }else{
+      fb.innerHTML=`
+        <div class="q">How did it go? <span class="saved" data-saved></span></div>
+        <div class="choices">
+          <label class="ok"><input type="radio" name="r${n}" value="Worked well"> Worked well</label>
+          <label class="part"><input type="radio" name="r${n}" value="Partly"> Partly</label>
+          <label class="bad"><input type="radio" name="r${n}" value="Did not work"> Did not work</label>
+        </div>
+        <textarea data-k="text" placeholder="What happened, what surprised you, what you would want instead. Paste any odd error text here too."></textarea>
+        <label class="done"><input type="checkbox" data-k="done"> Finished this station</label>`;
+    }
+    fb.querySelectorAll('textarea').forEach(t=>{t.value=st[t.dataset.k]||'';t.addEventListener('input',()=>{st[t.dataset.k]=t.value;save();flash(fb)})});
+    fb.querySelectorAll('input[type=radio]').forEach(r=>{r.checked=(st.rating===r.value);r.addEventListener('change',()=>{st.rating=r.value;save();flash(fb)})});
+    const d=fb.querySelector('input[type=checkbox]');d.checked=!!st.done;d.addEventListener('change',()=>{st.done=d.checked;save();progress()});
+  });
+
+  function flash(fb){const el=fb.querySelector('[data-saved]');if(!el)return;el.textContent='saved';clearTimeout(el._t);el._t=setTimeout(()=>el.textContent='',1200)}
+  function progress(){const d=stations.filter(s=>state[s.dataset.n]&&state[s.dataset.n].done).length;document.getElementById('prog').textContent=`${d} of ${stations.length} stations done`}
+  progress();
+
+  document.querySelectorAll('.prompt').forEach(p=>{
+    const b=document.createElement('button');b.textContent='Copy';
+    b.onclick=()=>{const t=[...p.childNodes].filter(n=>n.nodeType===3||(n.nodeType===1&&!n.matches('button,.label'))).map(n=>n.textContent).join('').trim();
+      navigator.clipboard.writeText(t).then(()=>{b.textContent='Copied';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied')},1500)})};
+    p.appendChild(b);
+  });
+
+  function report(){
+    const lines=['# Hands-on Session 1 feedback',`Exported ${new Date().toISOString().slice(0,16).replace('T',' ')}`,''];
+    stations.forEach(s=>{
+      const n=s.dataset.n, st=state[n]||{}, title=s.querySelector('h2').textContent;
+      lines.push(`## ${title}`);
+      if(s.querySelector('[data-verdict]')){
+        lines.push(`- Most time saved: ${st.v1||'(blank)'}`,`- Felt broken: ${st.v2||'(blank)'}`,`- Agent I would build: ${st.v3||'(blank)'}`);
+      }else{
+        lines.push(`- Rating: ${st.rating||'(not rated)'}`,`- Finished: ${st.done?'yes':'no'}`,`- Notes: ${(st.text||'(blank)').replace(/\n/g,'\n  ')}`);
+      }
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+  document.getElementById('copyAll').onclick=function(){navigator.clipboard.writeText(report()).then(()=>{this.textContent='Copied. Paste it to Claude.';setTimeout(()=>this.textContent='Copy all feedback for Claude',2500)})};
+  document.getElementById('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([report()],{type:'text/markdown'}));a.download='session-01-feedback.md';a.click()};
+})();
+</script>
+</body>
+</html>
